@@ -2,6 +2,16 @@
 
 from scrapy import log
 import os,sys
+reload(sys)
+import socket
+import time
+from scrapy.http import Request
+from douban.spiders.doubanspider import  DoubanSpider
+
+
+import urllib
+import urllib2
+from urllib2 import URLError, HTTPError
 
 """避免被ban策略之一：使用useragent池。
 
@@ -86,22 +96,59 @@ class ProxyMiddleware(object):
     def proxy_init(self):
         file_handler = open('%s/download_middleware/agent_server'%(self.dir_path),'r')
         proxy_agent_list = file_handler.readlines()
-        self.num_proxy = len(proxy_agent_list)
+
         self.url_list = []
         for proxy_agent in proxy_agent_list:
-            proxy_line = proxy_agent.split('\t')
+            proxy_line = proxy_agent.strip('\r\n').split('\t')
             if len(proxy_line) > 0:
                 ip = proxy_line[0]
                 port = proxy_line[1]
-                url = 'http://%s:%s' % (ip,port)
-                self.url_list.append(url)
+
+                if self.proxy_verify(ip,port) == True:
+                   url = 'http://%s:%s' % (ip,port)
+                   #self.url_list.append([ip,port])
+                   self.url_list.append(url)
+        self.num_proxy = len(self.url_list)
         file_handler.close()
 
+    def proxy_verify(self,domain,port):
+        return True
+        print "正在验证：%s,%s" % (domain,port)
+
+        #验证代理的可用性
+        #创建一个TCP连接套接字
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #设置10超时
+        sock.settimeout(10)
+        try:
+            start = time.clock()
+
+            #连接代理服务器
+            sock.connect((domain, int(port)))
+            last_time = int((time.clock() - start) * 1000)
+            sock.close()
+            print "%s,%s 验证通过，响应时间：%d ms." % (domain,port,last_time)
+            return True
+        except Exception, e:
+            print "%s,%s 验证失败." % (domain,port)
+            return False
            
     def process_request(self, request, spider):
+        # while True:
+        #    index = random.randint(0, self.num_proxy -1)
+        #    if self.proxy_verify(self.url_list[index][0],self.url_list[index][1]) == True:
+        #        break
+        # url = 'http://%s:%s' % (self.url_list[index][0],self.url_list[index][1])
+        # proxy_agent = url
         index = random.randint(0, self.num_proxy -1)
         proxy_agent = self.url_list[index]
+
         request.meta['proxy'] = proxy_agent
         print request.meta['proxy']
+
+    def process_exception(self,request,exception,spider):
+        print '********************************'
+        return request
+
 
            

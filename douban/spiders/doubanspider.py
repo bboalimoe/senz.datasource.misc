@@ -26,13 +26,21 @@ class DoubanSpider(CrawlSpider):
                     categoryUrl = "http://%s.douban.com/events/%s-%s" % (city,self.timeType,categoryEn)
                     self.start_urls.append(categoryUrl)
         name = "douban"
-        download_delay = 1
+        #download_delay = 1
 
         #parse the response with beautifulsoup
         def parse(self, response):
             #print response.body.decode(response.encoding)
             soup=BeautifulSoup(response.body)
             allEventsInfo=soup.find(attrs={'class':'events-list events-list-pic100 events-list-psmall'}).find_all("li")
+
+            catergorycn_re = re.compile(r'http\:\/\/\w+\.douban\.com\/events\/week-(\w+)')
+            catergory_list = re.findall(catergorycn_re,response.url)
+            categoryCn = ''
+            if len(catergory_list) >0:
+                for (k,v) in self.categoryDict.items():
+                    if v == catergory_list[0]:
+                        categoryCn = k
 
             for eventInfo in allEventsInfo:
                 try:
@@ -57,14 +65,19 @@ class DoubanSpider(CrawlSpider):
                 ticketFee = eventInfo.find(attrs={'class':'fee'}).get_text().strip().encode('utf-8')
 
                 date_time, start_time, end_time = getAvosTimeInfo(eventTimeDict["startDate"], eventTimeDict["endDate"])
+                item = DoubanItem()
+                item['name'] = eventTitle
+                item['date'] = date_time
+                item['start_time'] = start_time
+                item['end_time'] = end_time
+                item['ticket']= ticketFee
+                item['region'] = eventLocation
+                item['location'] = gps2GeoPoint(latitude,longitude)
+                item['category'] = categoryCn
+                item['source'] = DoubanSpider.__name__
+                yield item
 
-            catergorycn_re = re.compile(r'http\:\/\/\w+\.douban\.com\/events\/week-(\w+)')
-            catergory_list = re.findall(catergorycn_re,response.url)
-            categoryCn = ''
-            if len(catergory_list) >0:
-                for (k,v) in self.categoryDict.items():
-                    if v == catergory_list[0]:
-                        categoryCn = k
+
 
             #nextpage
             nextInfo = soup.find(attrs={'rel':"next"})
@@ -77,24 +90,17 @@ class DoubanSpider(CrawlSpider):
             catergory_re = re.compile(r'(http\:\/\/\w+\.douban\.com\/events\/week-\w+)')
             catergory_list = re.findall(catergory_re,response.url)
 
+
+
             if len(catergory_list) > 0:
                 categoryUrl = catergory_list[0]
             if next != "":
                 nextPageUrl = categoryUrl + next
-            else:
-                nextPageUrl = ""
-            print nextPageUrl
-            yield Request(nextPageUrl, callback=self.parse)
+                print nextPageUrl
+                yield Request(nextPageUrl, callback=self.parse)
 
-            item = DoubanItem()
-            item['name'] = eventTitle
-            item['date'] = date_time
-            item['start_time'] = start_time
-            item['end_time'] = end_time
-            item['ticket']= ticketFee
-            item['region'] = eventLocation
-            item['location'] = gps2GeoPoint(latitude,longitude)
-            item['category'] = categoryCn
-            item['source'] = DoubanSpider.__name__
-            yield item
+            #else:
+            #    nextPageUrl = ""
+
+
 
