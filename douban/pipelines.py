@@ -10,6 +10,7 @@ from douban.utils.avos_manager import *
 class DoubanPipeline(object):
     def __init__(self):
         self.avosManager = AvosManager()
+        self.res_dict = self.avosManager.getnfdict()
 
     def process_item(self, item, spider):
         print item['name']
@@ -20,8 +21,16 @@ class DoubanPipeline(object):
                     "category":item['category'],
                     "source" : item['source']}
 
+
         try:
-            self.avosManager.saveActivity(dataDict)
+            foot_print = self.avosManager.gen_footprint(item)
+            dataDict['foot_print'] = foot_print
+            if not self.res_dict.has_key(item['name']):
+               self.avosManager.saveActivity(dataDict)
+               print '插入数据'
+            elif foot_print != self.res_dict[item['name']]:
+               self.avosManager.updateDataByName('activities',item['name'],dataDict)
+               print '更新数据'
         except:
             print "avos exception!"
 

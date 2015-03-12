@@ -112,7 +112,6 @@ class ProxyMiddleware(object):
         file_handler.close()
 
     def proxy_verify(self,domain,port):
-        return True
         print "正在验证：%s,%s" % (domain,port)
 
         #验证代理的可用性

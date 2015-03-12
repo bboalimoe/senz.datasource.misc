@@ -6,6 +6,10 @@ import datetime
 import requests
 import settings
 from util_opt import *
+from hashlib import md5
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -249,7 +253,47 @@ class AvosManager(object):
                 else:
                     return '{}'  #leancloud's return data,but must be string not empty dict
 
+        #By Hushuying,get all data in leancloud
+        def getallData(self,className):
+            L = 1000
+            start = 0
+            res_len = L
+            res_list = []
+            while res_len == L:
+                results = self.getData(className,skip = start,limit=1000)
+                results = json.loads(results)['results']
+                res_len = len(results)
+                for res in results:
+                    res_list.append(res)
+                start = start+L
+            return res_list
 
+        #By Hushuying,generate footprint
+        def gen_footprint(self,item):
+            str_item = str(item['name'])+item['start_time']['iso']+\
+                       item['region']+str(item['ticket'])+\
+                       str(item['location']['latitude'])+\
+                       str(item['location']['longitude'])+\
+                       str(item['date']['iso'])
+            return self.calMD5(str_item)
+
+        #By hshy,generate md5
+        def calMD5(self,str):
+            m = md5()
+            m.update(str)
+            return m.hexdigest()
+
+        #By hshy,return a dict{name,foot_print}
+        def getnfdict(self):
+            res_list = self.getallData("activities")
+            res_dict = {}
+            for item in res_list:
+                if not res_dict.has_key(item['name']):
+                    if item.has_key('foot_print'):
+                       res_dict[item['name']] = item['foot_print']
+                    else:
+                       res_dict[item['name']] = ''
+            return res_dict
 
 
 if __name__ == "__main__":
@@ -271,11 +315,26 @@ if __name__ == "__main__":
         #avosManager.saveData(className,dataDict)
         #avosManager.saveActivity(dataDict)
         #avosManager.updateDataByName('activities','《文成公主》大型实景剧',dict(ticket='200'))
-        results = avosManager.getData("poiClass",order="longitude", where='{"type":"休闲娱乐"}',limit=10)
+        # results = avosManager.getData("poiClass",order="longitude", where='{"type":"休闲娱乐"}',limit=10)
+        # results = json.loads(results)['results']
+        # print results
+        # results = results[0:3]
+        # for r in results:
+        #     print r
+
+        results = avosManager.getData("activities",limit=1000)
         results = json.loads(results)['results']
         results = results[0:3]
+        print results
         for r in results:
-            print r
+            #print r['location']
+            # print r['ticket']
+            # print r['location']['latitude']
+            # print r['start_time']['iso']
+            print r['date']['iso']
+        # results = avosManager.getData("activities",skip = 1000,limit=999)
+        # results = json.loads(results)['results']
+        # print results[0]['name']
         #print avosManager.getIdByCondition(className,name='《文成公主》大型实景剧')
         '''
         AvosClass.app_settings = [settings.avos_app_id, settings.avos_app_key]
@@ -285,3 +344,31 @@ if __name__ == "__main__":
         else:
                 print res.content
         '''
+
+        print 'Getting user list …'
+        #print avosManager.getallData('activities')
+
+        print len(avosManager.getnfdict())
+
+        # res_list = avosManager.getallData("activities")
+        # res_dict = {}
+        # dataDict = {}
+        # for item in res_list:
+        #     if not res_dict.has_key(item['name']):
+        #         res_dict[item['name']] = avosManager.gen_footprint(item)
+        #         dataDict['name'] = item['name']
+        #         dataDict['foot_print'] = res_dict[item['name']]
+        #         avosManager.updateDataByName('activities',item['name'],dataDict)
+
+        # for (k,v) in res_dict.items():
+        #     print k,v
+        # print len(res_dict)
+        # res_dict = avosManager.getnfdict()
+        # for (k,v) in res_dict.items():
+        #     dataDict['name'] = k
+        #     dataDict['foot_print'] =
+        # dataDict = {"name":'3月份一起去海南冲浪吧！',
+        #             "foot_print":'190055ca2fd0ca1c4024388c11b07435'}
+        # avosManager.updateDataByName('activities','3月份一起去海南冲浪吧！',dataDict)
+
+
