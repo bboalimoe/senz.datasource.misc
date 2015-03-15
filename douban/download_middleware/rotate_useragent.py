@@ -99,8 +99,8 @@ class ProxyMiddleware(object):
 
         self.url_list = []
         for proxy_agent in proxy_agent_list:
-            proxy_line = proxy_agent.strip('\r\n').split('\t')
-            if len(proxy_line) > 0:
+            proxy_line = proxy_agent.strip('\r\n').split(' ')
+            if len(proxy_line) > 1:
                 ip = proxy_line[0]
                 port = proxy_line[1]
 
@@ -149,5 +149,6 @@ class ProxyMiddleware(object):
         print '********************************'
         return request
 
+if __name__ == "__main__":
+    px = ProxyMiddleware()
 
-           

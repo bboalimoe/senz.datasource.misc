@@ -17,7 +17,7 @@ ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline']
 # Retry many times since proxies often fail
 RETRY_TIMES = 10
 # Retry on most error codes since proxies fail for different reasons
-RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
+RETRY_HTTP_CODES = [500, 502, 503, 504, 400, 403, 404, 408]
 
 DOWNLOADER_MIDDLEWARES = {
     #'douban.download_middleware.duplicatefiltermiddware.DuplicatesFilterMiddleware': 500,
@@ -28,7 +28,7 @@ DOWNLOADER_MIDDLEWARES = {
     #'douban.download_middleware.retry.RetryMiddleware': 200
 }
 
-DOWNLOAD_DELAY = 0.25 # 250 ms of delay
+DOWNLOAD_DELAY = 1 # 1000 ms of delay
 
 LOG_ENABLED = True
 LOG_ENCODING = 'utf-8'
