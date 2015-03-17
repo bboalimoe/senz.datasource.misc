@@ -41,11 +41,11 @@ class DoubanPipeline(object):
 
         try:
             foot_print = self.avosManager.gen_footprint(item)
-            dataDict['foot_print'] = foot_print
+
             if not self.res_dict.has_key(item['name'].decode('utf-8')):
                self.avosManager.saveActivity(dataDict)
                print '插入数据'
-            elif foot_print != self.res_dict[item['name'].decode['utf-8']]:
+            elif foot_print != self.res_dict[item['name'].decode('utf-8')]:
                self.avosManager.updateDataByName('activities',item['name'],dataDict)
                print '更新数据'
             else:
@@ -54,5 +54,7 @@ class DoubanPipeline(object):
             print "avos exception!"
 
         return item
+
+
 if __name__ == "__main__":
         dp = DoubanPipeline()

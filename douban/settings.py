@@ -28,6 +28,21 @@ DOWNLOADER_MIDDLEWARES = {
     #'douban.download_middleware.retry.RetryMiddleware': 200
 }
 
+#mail
+EXTENSIONS = {
+    'douban.extensions.statusmailer.StatusMailer': 80
+}
+STATUSMAILER_RECIPIENTS = ['batulu1987315@163.com','448186083@qq.com']
+STATUSMAILER_COMPRESSION = 'gzip'
+#STATUSMAILER_COMPRESSION = None
+
+MAIL_FROM = 'batulu1987315@163.com'
+MAIL_HOST = 'smtp.163.com'
+MAIL_PORT = 25
+MAIL_USER = 'batulu1987315'
+MAIL_PASS = 'hshy1987ZFF'
+
+
 DOWNLOAD_DELAY = 1 # 1000 ms of delay
 
 LOG_ENABLED = True

@@ -22,11 +22,4 @@ class DoubanItem(scrapy.Item):
     source = Field()
     pass
 
-class DamaiItem(scrapy.Item):
-    name = Field()
-    date = Field()
-    start_time = Field()
-    ticket = Field()
-    region = Field()
-    location = Field()
-    category = Field()
+
