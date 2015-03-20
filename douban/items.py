@@ -22,4 +22,10 @@ class DoubanItem(scrapy.Item):
     source = Field()
     pass
 
-
+class DbMoiveItem(Item):
+    name=Field()#电影
+    score=Field()#豆瓣评分
+    summary=Field()#电影简介
+    classification=Field()#类型
+    poster=Field()#海报
+    source = Field()

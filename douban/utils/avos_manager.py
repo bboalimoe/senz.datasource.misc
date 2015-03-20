@@ -268,14 +268,7 @@ class AvosManager(object):
                 start = start+L
             return res_list
 
-        #By Hushuying,generate footprint
-        def gen_footprint(self,item):
-            str_item = str(item['name'])+item['start_time']['iso']+\
-                       item['region']+str(item['ticket'])+\
-                       str(item['location']['latitude'])+\
-                       str(item['location']['longitude'])+\
-                       str(item['date']['iso'])
-            return self.calMD5(str_item)
+
 
         #By hshy,generate md5
         def calMD5(self,str):

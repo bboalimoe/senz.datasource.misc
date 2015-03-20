@@ -12,7 +12,7 @@ BOT_NAME = 'douban'
 
 SPIDER_MODULES = ['douban.spiders']
 NEWSPIDER_MODULE = 'douban.spiders'
-ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline']
+ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline','douban.pipelines.DbMoviePipeline']
 
 # Retry many times since proxies often fail
 RETRY_TIMES = 10
@@ -43,7 +43,7 @@ MAIL_USER = 'batulu1987315'
 MAIL_PASS = 'hshy1987ZFF'
 
 
-DOWNLOAD_DELAY = 1 # 1000 ms of delay
+DOWNLOAD_DELAY = 5 # 1000 ms of delay
 
 LOG_ENABLED = True
 LOG_ENCODING = 'utf-8'
