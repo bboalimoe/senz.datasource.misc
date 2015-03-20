@@ -10,7 +10,7 @@ from douban.utils.avos_manager import *
 class DoubanPipeline(object):
     def __init__(self):
         self.avosManager = AvosManager()
-        self.res_dict = self.avosManager.getnfdict()
+        self.res_dict = self.avosManager.getnfdict("activities")
 
     #By Hushuying,generate footprint
     def gen_footprint(self,item):
@@ -53,7 +53,7 @@ class DoubanPipeline(object):
 class DbMoviePipeline(object):
     def __init__(self):
         self.avosManager = AvosManager()
-        self.res_dict = self.avosManager.getnfdict()
+        self.res_dict = self.avosManager.getnfdict("dbmovie")
 
      #By Hushuying,generate footprint
     def gen_footprint(self,item):

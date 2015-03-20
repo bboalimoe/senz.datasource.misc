@@ -277,8 +277,8 @@ class AvosManager(object):
             return m.hexdigest()
 
         #By hshy,return a dict{name,foot_print}
-        def getnfdict(self):
-            res_list = self.getallData("activities")
+        def getnfdict(self,classname):
+            res_list = self.getallData(classname)
             res_dict = {}
             for item in res_list:
                 if not res_dict.has_key(item['name']):
@@ -290,58 +290,59 @@ class AvosManager(object):
 
 
 if __name__ == "__main__":
-        avosManager = AvosManager()
-        start = "2013-05-05 20:30:45"
-        date_utc = getUtcDate(start)
-        start_utc = timeConvet2utc(start)
-        
-
-        
-        start_iso = start_utc.replace(" ","T")+".000Z"
-        date_iso = date_utc.replace(" ","T")+".000Z"
-        date_time = dict(__type='Date',iso=date_iso)    
-        start_time = dict(__type='Date',iso=start_iso)
-        end_time = dict(__type='Date',iso=start_iso)
-        dataDict = {"name":"《文成公主》大型实景剧","date":date_time,
-        "start_time":start_time,"end_time":end_time,"ticket":"220","region":"北京市海淀区北京邮电大学","location":gps2GeoPoint(39.970513,116.361834),"category":""}
-        className = "testDate"
-        #avosManager.saveData(className,dataDict)
-        #avosManager.saveActivity(dataDict)
-        #avosManager.updateDataByName('activities','《文成公主》大型实景剧',dict(ticket='200'))
-        # results = avosManager.getData("poiClass",order="longitude", where='{"type":"休闲娱乐"}',limit=10)
+        pass
+        # avosManager = AvosManager()
+        # start = "2013-05-05 20:30:45"
+        # date_utc = getUtcDate(start)
+        # start_utc = timeConvet2utc(start)
+        #
+        #
+        #
+        # start_iso = start_utc.replace(" ","T")+".000Z"
+        # date_iso = date_utc.replace(" ","T")+".000Z"
+        # date_time = dict(__type='Date',iso=date_iso)
+        # start_time = dict(__type='Date',iso=start_iso)
+        # end_time = dict(__type='Date',iso=start_iso)
+        # dataDict = {"name":"《文成公主》大型实景剧","date":date_time,
+        # "start_time":start_time,"end_time":end_time,"ticket":"220","region":"北京市海淀区北京邮电大学","location":gps2GeoPoint(39.970513,116.361834),"category":""}
+        # className = "testDate"
+        # #avosManager.saveData(className,dataDict)
+        # #avosManager.saveActivity(dataDict)
+        # #avosManager.updateDataByName('activities','《文成公主》大型实景剧',dict(ticket='200'))
+        # # results = avosManager.getData("poiClass",order="longitude", where='{"type":"休闲娱乐"}',limit=10)
+        # # results = json.loads(results)['results']
+        # # print results
+        # # results = results[0:3]
+        # # for r in results:
+        # #     print r
+        #
+        # results = avosManager.getData("activities",limit=1000)
         # results = json.loads(results)['results']
-        # print results
         # results = results[0:3]
+        # print results
         # for r in results:
-        #     print r
-
-        results = avosManager.getData("activities",limit=1000)
-        results = json.loads(results)['results']
-        results = results[0:3]
-        print results
-        for r in results:
-            #print r['location']
-            # print r['ticket']
-            # print r['location']['latitude']
-            # print r['start_time']['iso']
-            print r['date']['iso']
-        # results = avosManager.getData("activities",skip = 1000,limit=999)
-        # results = json.loads(results)['results']
-        # print results[0]['name']
-        #print avosManager.getIdByCondition(className,name='《文成公主》大型实景剧')
-        '''
-        AvosClass.app_settings = [settings.avos_app_id, settings.avos_app_key]
-        res = AvosClass.save(dataDict)
-        if 'createdAt' in json.loads(res.content):
-                print '\nSucceeded in creating test object in AvosClass!\n'
-        else:
-                print res.content
-        '''
-
-        print 'Getting user list …'
-        #print avosManager.getallData('activities')
-
-        print len(avosManager.getnfdict())
+        #     #print r['location']
+        #     # print r['ticket']
+        #     # print r['location']['latitude']
+        #     # print r['start_time']['iso']
+        #     print r['date']['iso']
+        # # results = avosManager.getData("activities",skip = 1000,limit=999)
+        # # results = json.loads(results)['results']
+        # # print results[0]['name']
+        # #print avosManager.getIdByCondition(className,name='《文成公主》大型实景剧')
+        # '''
+        # AvosClass.app_settings = [settings.avos_app_id, settings.avos_app_key]
+        # res = AvosClass.save(dataDict)
+        # if 'createdAt' in json.loads(res.content):
+        #         print '\nSucceeded in creating test object in AvosClass!\n'
+        # else:
+        #         print res.content
+        # '''
+        #
+        # print 'Getting user list …'
+        # #print avosManager.getallData('activities')
+        #
+        # print len(avosManager.getnfdict())
 
         # res_list = avosManager.getallData("activities")
         # res_dict = {}
