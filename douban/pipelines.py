@@ -35,7 +35,7 @@ class DoubanPipeline(object):
 
         try:
             foot_print = self.gen_footprint(item)
-
+            dataDict['foot_print'] = foot_print
             if not self.res_dict.has_key(item['name'].decode('utf-8')):
                self.avosManager.saveActivity(dataDict)
                print '插入数据'
@@ -77,6 +77,7 @@ class DbMoviePipeline(object):
 
         try:
             foot_print = self.gen_footprint(item)
+            dataDict['foot_print'] = foot_print
 
             if not self.res_dict.has_key(item['name'].decode('utf-8')):
                self.avosManager.saveData('dbmovie',dataDict)
@@ -93,4 +94,4 @@ class DbMoviePipeline(object):
 
 
 if __name__ == "__main__":
-        dp = DoubanPipeline()
+        dp = DbMoviePipeline()
