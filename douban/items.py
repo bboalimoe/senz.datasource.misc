@@ -29,3 +29,10 @@ class DbMoiveItem(Item):
     classification=Field()#类型
     poster=Field()#海报
     source = Field()
+
+class DzdpItem(Item):
+    name=Field()#餐厅名称
+    score=Field()#评分
+    address=Field()#地点
+    popularity=Field()#名人去过
+    source = Field()
