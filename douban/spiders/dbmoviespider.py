@@ -5,6 +5,7 @@ from scrapy.contrib.spiders import CrawlSpider,Rule
 from bs4 import BeautifulSoup
 from scrapy.http import Request
 from douban.items import DbMoiveItem
+from douban.utils.util_opt import *
 
 
 import time
@@ -44,15 +45,20 @@ class DbMovieSpider(CrawlSpider):
                 if movieInfo.a != None:
                     print movieInfo.a.get('href')
                     yield Request(movieInfo.a.get('href'), callback=self.parse)
-            next_page = soup.find_all(attrs={'rel':'next'})[0].get('href')
-            print next_page
-            yield Request(next_page, callback=self.parse)
+            next_page = soup.find_all(attrs={'rel':'next'})
+            if len(next_page) > 0:
+                next_page =next_page[0].get('href')
+                print next_page
+                yield Request(next_page, callback=self.parse)
         else:
             title = soup.find(attrs={'property':'v:itemreviewed'}).get_text().strip().encode('utf-8')
             summary = soup.find(attrs={'property':'v:summary'}).get_text().strip().encode('utf-8')
             score = soup.find(attrs={'class':'ll rating_num'}).get_text().strip().encode('utf-8')
             poster = soup.find(attrs={'class':'j a_show_login lnk-sharing'}).get('data-image')
-            classification = soup.find(attrs={'property':'v:genre'}).get_text().strip().encode('utf-8')
+            cf_list = soup.find_all(attrs={'property':'v:genre'})
+            classification = ''
+            for ci in cf_list:
+                classification = classification + ci.get_text().strip().encode('utf-8')+'/'
             print title
             print summary
             print score
@@ -82,6 +88,14 @@ if __name__ == "__main__":
         #             '科幻','悬疑','恐怖','成长']
         #url = 'http://movie.douban.com/tag/%s'%(category_list[0])
         #print url
+        url = 'http://movie.douban.com/subject/1297863/'
+        newpage=get_source(url)
+        soup=BeautifulSoup(newpage,"html.parser")
+        cf_list = soup.find_all(attrs={'property':'v:genre'})
+        classification = ''
+        for ci in cf_list:
+            classification = classification + ci.get_text().strip().encode('utf-8')+'/'
+        print classification
         stri = u'有一个地方只有我们知道 (豆瓣)'
         stri.strip(u'(豆瓣)')
         print stri

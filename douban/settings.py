@@ -12,7 +12,7 @@ BOT_NAME = 'douban'
 
 SPIDER_MODULES = ['douban.spiders']
 NEWSPIDER_MODULE = 'douban.spiders'
-ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline','douban.pipelines.DbMoviePipeline']
+ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline','douban.pipelines.DbMoviePipeline','douban.pipelines.DzdpPipeline']
 
 # Retry many times since proxies often fail
 RETRY_TIMES = 10
@@ -30,7 +30,8 @@ DOWNLOADER_MIDDLEWARES = {
 
 #mail
 EXTENSIONS = {
-    'douban.extensions.statusmailer.StatusMailer': 80
+    'douban.extensions.statusmailer.StatusMailer': 80,
+    #'douban.extensions.settingextension.SpiderLog':100
 }
 STATUSMAILER_RECIPIENTS = ['batulu1987315@163.com','448186083@qq.com']
 STATUSMAILER_COMPRESSION = 'gzip'
