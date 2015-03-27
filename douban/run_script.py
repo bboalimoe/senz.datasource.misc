@@ -28,7 +28,7 @@ from scrapy.utils.project import get_project_settings
 from scrapy import cmdline
 cmdline.execute("scrapy crawl dzdp --set LOG_FILE=log/dzdp.log".split())  #followall is the spider's name
 #cmdline.execute("scrapy crawl damai --set LOG_FILE=log/damai.log".split())  #followall is the spider's name
-
+crawler.spider
 # settings = get_project_settings()
 # #settings.set('LOG_FILE','/Users/batulu/PycharmProjects/spider/douban/log/dzdp.log')
 # spider = DzdpSpider()

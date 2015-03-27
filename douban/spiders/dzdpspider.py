@@ -107,7 +107,7 @@ class DzdpSpider(CrawlSpider):
                 session = requests.session()
                 jsonpage =(session.get(pageurl,headers=headers,timeout = 3)).text
                 json_dict = JSONDecoder().decode(jsonpage)
-                time.sleep(random.randint(1,5))
+                time.sleep(5)
                 if json_dict['msg'].has_key('pages'):
                     pages = json_dict['msg']['pages']
                     address = ''
@@ -119,7 +119,7 @@ class DzdpSpider(CrawlSpider):
                           "dealGroupId=%s&cityId=%s&action=shops&page=%s"%(name_id,city_id,str(page))
                         jsonpage =(session.get(pageurl,headers=headers,timeout = 3)).text
                         json_dict = JSONDecoder().decode(jsonpage)
-                        time.sleep(random.randint(1,5))
+                        time.sleep(5)
                         for adr in json_dict['msg']['shops']:
                             address = address +adr['address']+';'
                 else:

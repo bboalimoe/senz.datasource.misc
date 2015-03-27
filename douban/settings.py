@@ -49,9 +49,11 @@ DOWNLOAD_DELAY = 5 # 1000 ms of delay
 
 LOG_ENABLED = True
 LOG_ENCODING = 'utf-8'
-LOG_FILE = '/Users/batulu/PycharmProjects/spider/douban/log/douban.log'
+LOG_FILE = '/Users/batulu/PycharmProjects/spider/douban/log/spider.log'
 LOG_LEVEL = 'DEBUG'
 LOG_STDOUT = False
+
+COMMANDS_MODULE = 'douban.command'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'douban (+http://www.yourdomain.com)'
