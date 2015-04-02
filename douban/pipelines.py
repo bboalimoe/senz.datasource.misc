@@ -108,7 +108,7 @@ class DzdpPipeline(object):
     def process_item(self, item, spider):
         if spider.name not in ['dzdp']:
             return item
-        print item['source']
+        print item['name']
         dataDict = {"name":item['name'],"score":item['score'],
                     "address":item['address'],
                     "popularity":item['popularity'],
@@ -123,6 +123,76 @@ class DzdpPipeline(object):
                print '插入数据'
             elif foot_print != self.res_dict[item['name'].decode('utf-8')]:
                self.avosManager.updateDataByName('dzdp',item['name'],dataDict)
+               print '更新数据'
+            else:
+               print '已存在'
+        except:
+            print "avos exception!"
+
+        return item
+
+
+class WdjPipeline(object):
+    def __init__(self):
+        self.avosManager = AvosManager()
+        self.res_dict = self.avosManager.getnfdict("appCategory")
+
+     #By Hushuying,generate footprint
+    def gen_footprint(self,item):
+        str_item = str(item['name'])+\
+                   str(item['category'])
+        return self.avosManager.calMD5(str_item)
+
+    def process_item(self, item, spider):
+        if spider.name not in ['wdj']:
+            return item
+        print item['source']
+        dataDict = {"name":item['name'],"category":item['category']}
+
+        try:
+            foot_print = self.gen_footprint(item)
+            dataDict['foot_print'] = foot_print
+
+            if not self.res_dict.has_key(item['name'].decode('utf-8')):
+               self.avosManager.saveData('appCategory',dataDict)
+               print '插入数据'
+            elif foot_print != self.res_dict[item['name'].decode('utf-8')]:
+               self.avosManager.updateDataByName('appCategory',item['name'],dataDict)
+               print '更新数据'
+            else:
+               print '已存在'
+        except:
+            print "avos exception!"
+
+        return item
+
+class AppStorePipeline(object):
+    def __init__(self):
+        self.avosManager = AvosManager()
+        self.res_dict = self.avosManager.getnfdict("appstore")
+
+     #By Hushuying,generate footprint
+    def gen_footprint(self,item):
+        str_item = str(item['name'])+\
+                   str(item['category'])+\
+                   str(item['source'])
+        return self.avosManager.calMD5(str_item)
+
+    def process_item(self, item, spider):
+        if spider.name not in ['appstore']:
+            return item
+        print item['name']
+        dataDict = {"name":item['name'],"category":item['category'],"source":item['source']}
+
+        try:
+            foot_print = self.gen_footprint(item)
+            dataDict['foot_print'] = foot_print
+
+            if not self.res_dict.has_key(item['name'].decode('utf-8')):
+               self.avosManager.saveData('appstore',dataDict)
+               print '插入数据'
+            elif foot_print != self.res_dict[item['name'].decode('utf-8')]:
+               self.avosManager.updateDataByName('appstore',item['name'],dataDict)
                print '更新数据'
             else:
                print '已存在'

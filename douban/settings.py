@@ -12,7 +12,9 @@ BOT_NAME = 'douban'
 
 SPIDER_MODULES = ['douban.spiders']
 NEWSPIDER_MODULE = 'douban.spiders'
-ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline','douban.pipelines.DbMoviePipeline','douban.pipelines.DzdpPipeline']
+ITEM_PIPELINES = ['douban.pipelines.DoubanPipeline','douban.pipelines.DbMoviePipeline',
+                  'douban.pipelines.DzdpPipeline','douban.pipelines.WdjPipeline',
+                 'douban.pipelines.AppStorePipeline']
 
 # Retry many times since proxies often fail
 RETRY_TIMES = 10

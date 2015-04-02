@@ -36,3 +36,13 @@ class DzdpItem(Item):
     address=Field()#地点
     popularity=Field()#名人去过
     source = Field()
+
+class WdjItem(Item):
+    name = Field()#应用名称
+    category = Field() #分类
+    source = Field()
+
+class AppStoreItem(Item):
+    name = Field()#应用名称
+    category = Field() #分类
+    source = Field()
