@@ -6,6 +6,12 @@ from bs4 import BeautifulSoup
 from scrapy.http import Request
 from douban.items import DbMoiveItem
 from douban.utils.util_opt import *
+import requests
+import re
+import pycurl
+import json
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 
 import time
@@ -51,27 +57,44 @@ class DbMovieSpider(CrawlSpider):
                 print next_page
                 yield Request(next_page, callback=self.parse)
         else:
-            title = soup.find(attrs={'property':'v:itemreviewed'}).get_text().strip().encode('utf-8')
-            summary = soup.find(attrs={'property':'v:summary'}).get_text().strip().encode('utf-8')
-            score = soup.find(attrs={'class':'ll rating_num'}).get_text().strip().encode('utf-8')
-            poster = soup.find(attrs={'class':'j a_show_login lnk-sharing'}).get('data-image')
-            cf_list = soup.find_all(attrs={'property':'v:genre'})
-            classification = ''
-            for ci in cf_list:
-                classification = classification + ci.get_text().strip().encode('utf-8')+'/'
-            print title
-            print summary
-            print score
-            print poster
-            print classification
-            item = DbMoiveItem()
-            item['name'] = title
-            item['score'] = score
-            item['summary'] = summary
-            item['classification'] = classification
-            item['poster']= poster
-            item['source'] = DbMovieSpider.__name__
-            yield item
+            # title = soup.find(attrs={'property':'v:itemreviewed'}).get_text().strip().encode('utf-8')
+            # summary = soup.find(attrs={'property':'v:summary'}).get_text().strip().encode('utf-8')
+            # score = soup.find(attrs={'class':'ll rating_num'}).get_text().strip().encode('utf-8')
+            # poster = soup.find(attrs={'class':'j a_show_login lnk-sharing'}).get('data-image')
+            # cf_list = soup.find_all(attrs={'property':'v:genre'})
+            # classification = ''
+            # for ci in cf_list:
+            #     classification = classification + ci.get_text().strip().encode('utf-8')+'/'
+            # print title
+            # print summary
+            # print score
+            # print poster
+            # print classification
+            # item = DbMoiveItem()
+            # item['name'] = title
+            # item['score'] = score
+            # item['summary'] = summary
+            # item['classification'] = classification
+            # item['poster']= poster
+            # item['source'] = DbMovieSpider.__name__
+            # yield item
+            temp = response.url
+            id_re = re.compile(r'http\:\/\/movie\.douban\.com\/subject\/(\d+)\/')
+            dbMovieID = re.findall(id_re,temp)
+            if len(dbMovieID)>0:
+                # url = 'http://apiparser.avosapps.com/dbmovie/%s/update' % dbMovieID[0]
+                # print url
+                get_url = 'http://apiparser.avosapps.com/dbmovie/%s' % dbMovieID[0]
+                # requests.post(url)
+                session = requests.session()
+                newpage=session.get(get_url)
+                print newpage.text
+                json_obj = json.loads(newpage.text)
+                f = open('moviename.txt','a')
+                #f = file('moviename.txt','w')
+                print json_obj['name']
+                f.write(json_obj['name']+'\r\n')
+                f.close()
         pass
 
 if __name__ == "__main__":
@@ -88,15 +111,38 @@ if __name__ == "__main__":
         #             '科幻','悬疑','恐怖','成长']
         #url = 'http://movie.douban.com/tag/%s'%(category_list[0])
         #print url
-        url = 'http://movie.douban.com/subject/1297863/'
-        newpage=get_source(url)
-        soup=BeautifulSoup(newpage,"html.parser")
-        cf_list = soup.find_all(attrs={'property':'v:genre'})
-        classification = ''
-        for ci in cf_list:
-            classification = classification + ci.get_text().strip().encode('utf-8')+'/'
-        print classification
-        stri = u'有一个地方只有我们知道 (豆瓣)'
-        stri.strip(u'(豆瓣)')
-        print stri
+        # url = 'http://movie.douban.com/subject/1297863/'
+        # newpage=get_source(url)
+        # soup=BeautifulSoup(newpage,"html.parser")
+        # cf_list = soup.find_all(attrs={'property':'v:genre'})
+        # classification = ''
+        # for ci in cf_list:
+        #     classification = classification + ci.get_text().strip().encode('utf-8')+'/'
+        # print classification
+        # stri = u'有一个地方只有我们知道 (豆瓣)'
+        # stri.strip(u'(豆瓣)')
+        # print stri
+        temp = 'http://movie.douban.com/subject/6875263/'
+        id_re = re.compile(r'http\:\/\/movie\.douban\.com\/subject\/(\d+)\/')
+        dbMovieID = re.findall(id_re,temp)
+        print dbMovieID
+        url = 'http://apiparser.avosapps.com/dbmovie/%s/update' % dbMovieID[0]
+        print url
+        get_url = 'http://apiparser.avosapps.com/dbmovie/%s' % dbMovieID[0]
+        # requests.post(url)
+        session = requests.session()
+        newpage=session.get(get_url)
+        print newpage.text
+        json_obj = json.loads(newpage.text)
+        f = open('moviename.txt','a')
+        print json_obj['name']
+        f.write(json_obj['name']+'\r\n')
+        f.write(json_obj['name']+'\r\n')
+        f.write(json_obj['name']+'\r\n')
+        f.close()
+        # pc = pycurl.Curl()
+        # pc.setopt(pycurl.POST, 1)
+        # pc.setopt(pycurl.URL, url)
+        # pc.perform()
+        # pc.close()
         pass
